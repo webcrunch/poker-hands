@@ -108,7 +108,7 @@ module.exports = class CompareHands{
                 // score =+ value; 
             }
         }
-        if(pairs.length > 0) return pairs;
+        if(pairs.length > 0) return  pairs.reduce((partialSum, a) => partialSum + a, 0);
         return 0;
         // console.log(score);
         // for (let o in ov) {
