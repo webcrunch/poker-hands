@@ -8,7 +8,8 @@ const aHand = new Hand('♣2', '♣7', '♣4', '♣5', '♣A');
 const pair = new Hand('♣2', '♣3', '♣4', '♣5', '♣5');
 const aHand2 = new Hand('♦3', '♣7', '♣7', '♦3', '♦Q');
 const aHand3 = new Hand('♠2', '♠3', '♠4', '♠5', '♠A');
-const three = new Hand('♠2', '♠2', '♠2', '♠5', '♠A');
+const full = new Hand('♠A', '♠A', '♠A', '♠2', '♠2');
+const full2 = new Hand('♠K', '♠K', '♠K', '♠4', '♠4');
 let handaa = new Hand('♠2', '♦2', '♠4', '♠5', '♠A');
 // console.log(aHand3);
 // console.log(CompareHands.isFlush(aHand));
@@ -16,7 +17,8 @@ let handaa = new Hand('♠2', '♦2', '♠4', '♠5', '♠A');
 // console.log(CompareHands.isStraight(aHand2));
 // let a = CompareHands.isHighestCard(aHand);
 // let b = CompareHands.isHighestCard(aHand3);
-console.log(CompareHands.isThreeOfAKind(three));
+console.log(CompareHands.isFullHouse(full));
+console.log(CompareHands.isFullHouse(full2));
 // let deck = 
 // // let randomHand = Hand.
 // console.log("Random hand", new DeckOfCards().dealHand())

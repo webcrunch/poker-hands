@@ -4,12 +4,12 @@ module.exports = class CompareHands{
 
     static comparer(hand1, hand2) {
         let comparers = [
-            'isStraightFlush', // klar
-            'isFourOfAKind', //  todo
-            'isFullHouse', // todo
+            'isStraightFlush', // done
+            'isFourOfAKind', //  done
+            'isFullHouse', // done
             'isFlush', // done
             'isStraight', // done
-            'isThreeOfAKind', //todo
+            'isThreeOfAKind', //done
             'isTwoPair', // done
             'isOnePair', // done
             'isHighestCard'  // done
@@ -30,14 +30,23 @@ module.exports = class CompareHands{
     }
 
     static isFourOfAKind(hand) {
-        return 0; //TODO;
+        let ranks = this.numberOfCurrences(hand.cards);
+        let ov = Object.values(ranks);
+        if (ov.includes(4) && ov.indexOf(4) === ov.lastIndexOf(4)) {
+            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(4)]);
+        }
+        return 0; 
     }
 
 
     static isFullHouse(hand) {
+        let three = this.isThreeOfAKind(hand);
+        let two = this.isTwoPair((hand))[0];
+        if (three > 0 && two > 0) {
+            return three + two;
+        }
         return 0;
     }
-
 
     static isFlush(hand) {
         // hand.cards
@@ -76,7 +85,10 @@ module.exports = class CompareHands{
     static isThreeOfAKind(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        console.log(ranks);
+        let ov = Object.values(ranks);
+        if (ov.includes(3) && ov.indexOf(3) === ov.lastIndexOf(3)) {
+            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(3)]);
+        }
         return 0;
     }
 
