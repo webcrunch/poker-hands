@@ -11,7 +11,7 @@ on:
 # on: [pull_request, push]
 
 jobs:
-  hamsterDance:
+  buildAndTest:
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,22 +30,4 @@ jobs:
       # run: npm run build --if-present (build if there is something that could be builds)
       - name: tests
         run: npm test
-  hamsterDance2:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm install
-        run: npm ci
-      #-name: build dist folder
-      # run: npm run build --if-present (build if there is something that could be builds)
-      - name: tests
-        run: npm test
+  
