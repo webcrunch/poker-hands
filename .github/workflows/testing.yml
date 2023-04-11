@@ -11,7 +11,7 @@ on:
 # on: [pull_request, push]
 
 jobs:
-  tests:
+  hamsterDance:
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,5 +26,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install
         run: npm ci
+      #-name: build dist folder
+      # run: npm run build --if-present (build if there is something that could be builds)
       - name: tests
         run: npm test
