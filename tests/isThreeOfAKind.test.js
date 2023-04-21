@@ -9,13 +9,13 @@ test('check if the hand includes three pairs', () => {
 })
 
 
-test('check if the hand not includes thres pairs', () => {
+test('check if the hand not includes three pairs', () => {
     let hand = new Hand('♠2', '♦2', '♠7', '♠5', '♠A');
     expect(CompareHands.isThreeOfAKind(hand)).toBeFalsy();
 })
     
 
-test('Check if a falsy flush returns a 0 ', () => {
+test('Check if a falsy flush returns 0 ', () => {
         let hand = new Hand('♠2', '♦2', '♠7', '♠5', '♠A');
     expect(CompareHands.isThreeOfAKind(hand)).toBe(0)
 });

@@ -14,7 +14,7 @@ test('check that isStraight return falsy if no Straight', () => {
     expect(CompareHands.isStraight(hand)).toBeFalsy();
 })
 
-test('Check if a falsy straight returns a 0 ', () => {
+test('Check if a falsy straight returns 0 ', () => {
     let hand = new Hand('♠2', '♠3', '♠8', '♠6', '♠A');
     expect(CompareHands.isStraight(hand)).toBe(0)
 });

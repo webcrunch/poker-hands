@@ -2,14 +2,21 @@ const CompareHands = require('../CompareHands');
 const Hand = require('../Hand');
 
 // test so it returns truthfully, the hand comes back
-test('Check that a full house returns thruthy if is correct', () => {
-    const fullH = new Hand('♠A', '♠A', '♦3', '♠A', '♦3');
-    expect(CompareHands.isFullHouse(fullH)).toBeTruthy();
+test('Check that a full house returns thruthy if is cor', () => {
+   const full2 = new Hand('♠K', '♠K', '♦K', '♠4', '♦4');
+    expect(CompareHands.isFullHouse(full2)).toBeTruthy();
 });
 
 
 // test so it returns truthfully, the hand comes back
-test('Check that no  full house returns falsy if is falty', () => {
-    const fullH = new Hand('♠A', '♠A', '♦3', '♠A', '♦6');
-    expect(CompareHands.isFullHouse(fullH)).toBeFalsy();
+test('Check that not a  full house returns falsy', () => {
+   const full2 = new Hand('♠K', '♠K', '♦K', '♠4', '♦3');
+    expect(CompareHands.isFullHouse(full2)).toBeFalsy();
+});
+
+
+
+test('Check if a falsy full house  returns 0 ', () => {
+    const full2 = new Hand('♠K', '♠K', '♦K', '♠4', '♦3');
+    expect(CompareHands.isFullHouse(full2)).toBe(0)
 });
