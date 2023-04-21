@@ -2,7 +2,9 @@ module.exports = class CompareHands{
     static suits = '♠♥♦♣';
     static ranks = '23456789TJQKA';
 
-    static comparer(hand1, hand2) {
+    static comparer(hand1, hand2) {    
+        let checkduplicatesOnhands = this.checkForduplicateHands(hand1, hand2);
+        if (checkduplicatesOnhands < 1) return checkduplicatesOnhands === -1 ? hand1 : checkduplicatesOnhands === -2 ? hand2 : [];
         let comparers = [
             'isStraightFlush', // done
             'isFourOfAKind', //  done
@@ -100,15 +102,16 @@ module.exports = class CompareHands{
         // let keys = Object.keys(ranks);
         // let score = 0;
         let pairs = [];
-        for (const [key, value] of Object.entries(ranks)) {
-            // console.log(` here? ${key}: ${value}`);
-            
+        for (const [key, value] of Object.entries(ranks)) {            
             if (value === 2) {
                 pairs.push(Number(key));
                 // score =+ value; 
             }
         }
-        if(pairs.length > 0) return  pairs.reduce((partialSum, a) => partialSum + a, 0);
+        if (pairs.length > 0) {
+            
+            return pairs.reduce((partialSum, a) => partialSum + a, 0);
+        }
         return 0;
         // console.log(score);
         // for (let o in ov) {
@@ -120,6 +123,7 @@ module.exports = class CompareHands{
         // }
         
     }
+    // need to check this function add kicker handling
 
     static isOnePair(hand) { // if there is two or more pairs then it returns 0;
         this.sortByRank(hand);
@@ -151,6 +155,53 @@ module.exports = class CompareHands{
         return ranks;
     }
 
+    static checkForduplicateHands(hand1,hand2) {
+        let checkhand1 = this.checkFormultipleCards(this.convertToArray(hand1.cards));
+        let checkhand2 = this.checkFormultipleCards(this.convertToArray(hand2.cards));
+        if (checkhand1 > -1 && checkhand2 > -1) {
+        let checkBoth = this.convertToArrayDouble(hand1.cards, hand2.cards)
+            if (Array.from(new Set(checkBoth)).length > 9) 
+                return 1;
+            return -3;
+            // if both hands return 1 then both hands are ok. 
+            
+        }
+        else {
+            return checkhand1 < 0 ? -1 : -2;
+        }
+        
+
+        // if first hands is multiple 
+
+
+    }
+
+    static convertToArrayDouble(hand1,hand2) {
+        let handArray = [];
+        
+        for (let i = 0; i < hand1.length; i++){
+            handArray.push(hand1[i].suit + hand1[i].rank)
+        }
+
+        for (let i = 0; i < hand2.length; i++){
+            handArray.push(hand2[i].suit + hand2[i].rank)
+        }
+        return handArray;
+    }
+
+    static convertToArray(hand) {
+        let handArray = [];
+        
+        for (let i = 0; i < hand.length; i++){
+            handArray.push(hand[i].suit + hand[i].rank)
+        }
+        return handArray;
+    }
+
+    static checkFormultipleCards(hand) {
+        if (Array.from(new Set(hand)).length < 5) return -1;
+        return 1;
+    }
 
     static rankToPoint(rank) {
         return this.ranks.indexOf(rank) + 2;
