@@ -4,7 +4,7 @@ module.exports = class CompareHands{
 
     static comparer(hand1, hand2) {    
         let checkduplicatesOnhands = this.checkForduplicateHands(hand1, hand2);
-        if (checkduplicatesOnhands < 1) return checkduplicatesOnhands === -1 ? hand1 : checkduplicatesOnhands === -2 ? hand2 : [];
+        if (checkduplicatesOnhands < 1) return checkduplicatesOnhands === -1 ? hand2 : checkduplicatesOnhands === -2 ? hand1 : [];
         let comparers = [
             'isStraightFlush', // done
             'isFourOfAKind', //  done
@@ -43,7 +43,8 @@ module.exports = class CompareHands{
 
     static isFullHouse(hand) {
         let three = this.isThreeOfAKind(hand);
-        let two = this.isTwoPair((hand))[0];
+        let two = this.isTwoPair((hand));
+
         if (three > 0 && two > 0) {
             return three + two;
         }
@@ -87,9 +88,19 @@ module.exports = class CompareHands{
     static isThreeOfAKind(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        let ov = Object.values(ranks);
-        if (ov.includes(3) && ov.indexOf(3) === ov.lastIndexOf(3)) {
-            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(3)]);
+        let pairs = [];
+        let all = [];
+        for (const [key, value] of Object.entries(ranks)) {            
+            if (value === 3) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
+        }
+        if (pairs.length > 0) {
+           let score = 0, counter = 0;
+            for (let a of all) {
+                score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
         }
         return 0;
     }
@@ -97,45 +108,45 @@ module.exports = class CompareHands{
     static isTwoPair(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        
-        // let ov = Object.values(ranks);
-        // let keys = Object.keys(ranks);
-        // let score = 0;
         let pairs = [];
+        let all = [];
         for (const [key, value] of Object.entries(ranks)) {            
-            if (value === 2) {
-                pairs.push(Number(key));
-                // score =+ value; 
-            }
+            if (value === 2) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
         }
         if (pairs.length > 0) {
-            
-            return pairs.reduce((partialSum, a) => partialSum + a, 0);
+           let score = 0, counter = 0;
+            for (let a of all) {
+            score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
         }
         return 0;
-        // console.log(score);
-        // for (let o in ov) {
-        //     console.log(o);
-        // }
-
-        // if (ov.includes(2) && ov.indexOf(2) === ov.lastIndexOf(2)) {
-        //     return this.rankToPoint(Object.keys(ranks)[ov.indexOf(2)]);
-        // }
-        
     }
-    // need to check this function add kicker handling
 
-    static isOnePair(hand) { // if there is two or more pairs then it returns 0;
+    static isOnePair(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        let ov = Object.values(ranks);
-        if (ov.includes(2) && ov.indexOf(2) === ov.lastIndexOf(2)) {
-            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(2)]);
+        let pairs = [];
+        let all = [];
+        for (const [key, value] of Object.entries(ranks)) {            
+            if (value === 2) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
+        }
+        if (pairs.length > 0) {
+           let score = 0, counter = 0;
+            for (let a of all) {
+            score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
         }
         return 0;
     }
 
     static isHighestCard(hand) {
+        hand.cards.sort((a, b) => a < b ? 1 : -1);
        let score = 0, counter = 0;
         for (let card of hand.cards) {
             score += this.rankToPoint(card.rank) * 10 ** counter;
