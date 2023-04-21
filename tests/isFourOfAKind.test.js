@@ -3,13 +3,20 @@ const Hand = require('../Hand');
 
 test('Check that isFourOfAKind returns thruthy if FourOfAKind', () => {
     let hand = new Hand('♣2', '♣2', '♣2', '♣2', '♣5');
-    expect(CompareHands.isFlush(hand)).toBeTruthy();
+    expect(CompareHands.isFourOfAKind(hand)).toBeTruthy();
 });
 
 test('Check that isFourOfAKind returns falsy if no FourOfAKind', () => {
     let hand = new Hand('♣2', '♣7', '♣3', '♠8', '♣5');
-    expect(CompareHands.isFlush(hand)).toBeFalsy();
+    expect(CompareHands.isFourOfAKind(hand)).toBeFalsy();
 });
+
+test('check if return is a 0 if there is no FourOfAKind', () => {
+    let hand = new Hand('♣2', '♣7', '♣3', '♠8', '♣5');
+    expect(CompareHands.isOnePair(hand)).toBe(0);
+})
+
+    
 
 // test('check that isFourOfAKind returns a higher score for a stringer hand( if two hands with flush)', () => {
 //     let hand1 = new Hand('♣2', '♣6', '♣4', '♣8', '♣7');
