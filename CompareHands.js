@@ -2,7 +2,9 @@ module.exports = class CompareHands{
     static suits = '♠♥♦♣';
     static ranks = '23456789TJQKA';
 
-    static comparer(hand1, hand2) {
+    static comparer(hand1, hand2) {    
+        let checkduplicatesOnhands = this.checkForduplicateHands(hand1, hand2);
+        if (checkduplicatesOnhands < 1) return checkduplicatesOnhands === -1 ? hand2 : checkduplicatesOnhands === -2 ? hand1 : [];
         let comparers = [
             'isStraightFlush', // done
             'isFourOfAKind', //  done
@@ -41,7 +43,8 @@ module.exports = class CompareHands{
 
     static isFullHouse(hand) {
         let three = this.isThreeOfAKind(hand);
-        let two = this.isTwoPair((hand))[0];
+        let two = this.isTwoPair((hand));
+
         if (three > 0 && two > 0) {
             return three + two;
         }
@@ -85,9 +88,19 @@ module.exports = class CompareHands{
     static isThreeOfAKind(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        let ov = Object.values(ranks);
-        if (ov.includes(3) && ov.indexOf(3) === ov.lastIndexOf(3)) {
-            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(3)]);
+        let pairs = [];
+        let all = [];
+        for (const [key, value] of Object.entries(ranks)) {            
+            if (value === 3) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
+        }
+        if (pairs.length > 0) {
+           let score = 0, counter = 0;
+            for (let a of all) {
+                score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
         }
         return 0;
     }
@@ -95,43 +108,45 @@ module.exports = class CompareHands{
     static isTwoPair(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        
-        // let ov = Object.values(ranks);
-        // let keys = Object.keys(ranks);
-        // let score = 0;
         let pairs = [];
-        for (const [key, value] of Object.entries(ranks)) {
-            // console.log(` here? ${key}: ${value}`);
-            
-            if (value === 2) {
-                pairs.push(Number(key));
-                // score =+ value; 
-            }
+        let all = [];
+        for (const [key, value] of Object.entries(ranks)) {            
+            if (value === 2) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
         }
-        if(pairs.length > 0) return  pairs.reduce((partialSum, a) => partialSum + a, 0);
+        if (pairs.length > 0) {
+           let score = 0, counter = 0;
+            for (let a of all) {
+            score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
+        }
         return 0;
-        // console.log(score);
-        // for (let o in ov) {
-        //     console.log(o);
-        // }
-
-        // if (ov.includes(2) && ov.indexOf(2) === ov.lastIndexOf(2)) {
-        //     return this.rankToPoint(Object.keys(ranks)[ov.indexOf(2)]);
-        // }
-        
     }
 
-    static isOnePair(hand) { // if there is two or more pairs then it returns 0;
+    static isOnePair(hand) {
         this.sortByRank(hand);
         let ranks = this.numberOfCurrences(hand.cards);
-        let ov = Object.values(ranks);
-        if (ov.includes(2) && ov.indexOf(2) === ov.lastIndexOf(2)) {
-            return this.rankToPoint(Object.keys(ranks)[ov.indexOf(2)]);
+        let pairs = [];
+        let all = [];
+        for (const [key, value] of Object.entries(ranks)) {            
+            if (value === 2) pairs.push(Number(this.rankToPoint(key)));
+            all.push(Number(this.rankToPoint(key)));
+        }
+        if (pairs.length > 0) {
+           let score = 0, counter = 0;
+            for (let a of all) {
+            score += a * 10 ** counter;
+            counter += 2;
+            }
+            return score;
         }
         return 0;
     }
 
     static isHighestCard(hand) {
+        hand.cards.sort((a, b) => a < b ? 1 : -1);
        let score = 0, counter = 0;
         for (let card of hand.cards) {
             score += this.rankToPoint(card.rank) * 10 ** counter;
@@ -151,6 +166,53 @@ module.exports = class CompareHands{
         return ranks;
     }
 
+    static checkForduplicateHands(hand1,hand2) {
+        let checkhand1 = this.checkFormultipleCards(this.convertToArray(hand1.cards));
+        let checkhand2 = this.checkFormultipleCards(this.convertToArray(hand2.cards));
+        if (checkhand1 > -1 && checkhand2 > -1) {
+        let checkBoth = this.convertToArrayDouble(hand1.cards, hand2.cards)
+            if (Array.from(new Set(checkBoth)).length > 9) 
+                return 1;
+            return -3;
+            // if both hands return 1 then both hands are ok. 
+            
+        }
+        else {
+            return checkhand1 < 0 ? -1 : -2;
+        }
+        
+
+        // if first hands is multiple 
+
+
+    }
+
+    static convertToArrayDouble(hand1,hand2) {
+        let handArray = [];
+        
+        for (let i = 0; i < hand1.length; i++){
+            handArray.push(hand1[i].suit + hand1[i].rank)
+        }
+
+        for (let i = 0; i < hand2.length; i++){
+            handArray.push(hand2[i].suit + hand2[i].rank)
+        }
+        return handArray;
+    }
+
+    static convertToArray(hand) {
+        let handArray = [];
+        
+        for (let i = 0; i < hand.length; i++){
+            handArray.push(hand[i].suit + hand[i].rank)
+        }
+        return handArray;
+    }
+
+    static checkFormultipleCards(hand) {
+        if (Array.from(new Set(hand)).length < 5) return -1;
+        return 1;
+    }
 
     static rankToPoint(rank) {
         return this.ranks.indexOf(rank) + 2;
