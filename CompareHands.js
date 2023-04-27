@@ -146,7 +146,23 @@ module.exports = class CompareHands{
     }
 
     static isHighestCard(hand) {
+        // need to check so it wont have pairs or more or only one suit(flush)
         hand.cards.sort((a, b) => a < b ? 1 : -1);
+        
+        let ranks = this.numberOfCurrences(hand.cards);
+        // check for occurences of the same card. 
+        let checkForHigherThanHighestCard = Object.values(ranks).map(a => {
+            if (a > 1) return false;
+            else return null;
+        })
+        // check for occurences of the same suit. 
+        let suit = [];
+        for (let i = 0; i < hand.cards.length; i++){
+            suit.push(hand.cards[i].suit);
+        }
+        
+        if (checkForHigherThanHighestCard.length < 5 || Array.from(new Set(suit)).length < 2) return 0;
+ 
        let score = 0, counter = 0;
         for (let card of hand.cards) {
             score += this.rankToPoint(card.rank) * 10 ** counter;
@@ -162,7 +178,6 @@ module.exports = class CompareHands{
             ranks[card.rank] = ranks[card.rank] || 0;
             ranks[card.rank]++;
         }
-
         return ranks;
     }
 
